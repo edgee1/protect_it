@@ -7,6 +7,9 @@ use defence::DefencePlugin;
 use bevy::prelude::*;
 use enemy::{EnemyPlugin};
 
+struct ChangeHealthEvent(f32/*amount of damage */, u32/*enemy id */);
+struct EnemyDespawned(u32 /* despawned enemy id */);
+
 const ENEMY_1_TEXTURE: &str = "enemy_1.png";
 const CANNON_TEXTURE_TRIAL: &str = "cannon.png";
 const BALL_TEXTURE: &str = "ball.png";
@@ -14,7 +17,7 @@ const TIME_STEP: f32 = 1./60.;
 const RELOAD_TIME: u64 = 2;
 const SHOOT_RADIUS: f32 = 300.;
 pub const VELOCITY: f32 = 500.;
-pub const LEVEL_01_ENEMIES_ORDER: &str = "111 11111111  11111";
+pub const LEVEL_01_ENEMIES_ORDER: &str = "111111111111111";
 
 pub struct Textures {
     enemy_1: Handle<Image>,
@@ -27,6 +30,8 @@ struct WinSize {
 }
 fn main() {
     App::new()
+        .add_event::<ChangeHealthEvent>()
+        .add_event::<EnemyDespawned>()
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup)
         .add_plugin(EnemyPlugin)
