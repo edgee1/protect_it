@@ -108,6 +108,5 @@ fn debug_enemy_health (
                 }
             }
         }
-//        println!("health: {}, id: {}", crs.health, entity.id());
     }
 }

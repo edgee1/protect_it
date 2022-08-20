@@ -1,10 +1,15 @@
 #![allow(unused)]
 mod enemy;
 mod defence;
+mod camera;
+mod tilemap;
 
+use bevy_ecs_tilemap::prelude::*;
+use camera::CameraPlugin;
 use defence::DefencePlugin;
+use tilemap::TilemapDrawPlugin;
 
-use bevy::prelude::*;
+use bevy::{prelude::*, asset::AssetServerSettings, render::texture::ImageSettings};
 use enemy::{EnemyPlugin};
 
 struct ChangeHealthEvent(f32/*amount of damage */, u32/*enemy id */);
@@ -16,9 +21,15 @@ const BALL_TEXTURE: &str = "ball.png";
 const TIME_STEP: f32 = 1./60.;
 const RELOAD_TIME: u64 = 2;
 const SHOOT_RADIUS: f32 = 300.;
-pub const VELOCITY: f32 = 500.;
+pub const VELOCITY: f32 = 300.;
 pub const LEVEL_01_ENEMIES_ORDER: &str = "111111111111111";
 
+pub struct RoadTiles(Vec<i32>);
+impl RoadTiles {
+    pub fn level_01() -> Self {
+        RoadTiles(vec![0, 18, 10, -5, 20, 20] ) 
+    }
+}
 pub struct Textures {
     enemy_1: Handle<Image>,
     cannon: Handle<Image>,
@@ -32,10 +43,13 @@ fn main() {
     App::new()
         .add_event::<ChangeHealthEvent>()
         .add_event::<EnemyDespawned>()
-        .add_plugins(DefaultPlugins)
         .add_startup_system(setup)
+        .add_plugins(DefaultPlugins)
         .add_plugin(EnemyPlugin)
+        .add_plugin(TilemapPlugin)
+        .add_plugin(TilemapDrawPlugin)
         .add_plugin(DefencePlugin)
+        .add_plugin(CameraPlugin)
         .insert_resource(WindowDescriptor {
             width: 1920.,
             height: 1080.,
@@ -63,5 +77,8 @@ pub fn setup(
             h: window.height(),
             w: window.width(),
         }
-    )
+    );
+
 }
+
+

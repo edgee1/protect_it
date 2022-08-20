@@ -49,7 +49,7 @@ fn spawn_defence(
         commands.spawn_bundle(SpriteBundle {
             texture: textures.cannon.clone(),
             transform: Transform { 
-                translation: Vec3::new(rand.gen_range(-win_size.w / 2. ..win_size.w / 2. ), rand.gen_range(-win_size.h / 2. ..win_size.h / 2.), 0.), 
+                translation: Vec3::new(rand.gen_range(-win_size.w / 2. ..win_size.w / 2. ), rand.gen_range(-win_size.h / 2. ..win_size.h / 2.), 1.), 
                 ..Default::default() 
                 },
             sprite: Sprite { custom_size: Some(Vec2::new(50., 50.)), ..Default::default()},
