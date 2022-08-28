@@ -1,7 +1,7 @@
 use bevy::{prelude::*, render::texture::ImageSettings};
 use bevy_ecs_tilemap::prelude::*;
 
-use crate::RoadTiles;
+use crate::{RoadTiles, Path, TILE_SIZE, TILEMAP_SIZE};
 
 pub struct TilemapDrawPlugin;
 impl Plugin for TilemapDrawPlugin {
@@ -64,8 +64,8 @@ fn draw_road(
     mut tilemap_query: Query<&TileStorage>
 ) {
     let road_texture_handle: Handle<Image> = asset_server.load("road_texture_straight.png");
-
-    let tilemap_size = TilemapSize {x: 64, y: 36};
+    
+    let tilemap_size = TilemapSize {x: TILEMAP_SIZE.0, y: TILEMAP_SIZE.1 };
 
     let tilemap_entity = commands.spawn().id();
 
@@ -80,7 +80,7 @@ fn draw_road(
         if pos < road_tiles.len() - 2 {
             if current_dir_is_x {
                 let dir = if road_tiles[pos + 2] > 0 {1} else {-1};
-                for x in 0..(road_tiles[pos + 2]  - road_tiles[pos]).abs() {
+                for x in 0..road_tiles[pos + 2].abs() {
                     let tile_pos = TilePos {x: x_pos_tile as u32, y: y_pos_tile as u32};
                     let tile_entity = commands
                         .spawn()
@@ -89,7 +89,9 @@ fn draw_road(
                             tilemap_id: TilemapId(tilemap_entity),
                             ..Default::default()
                         })
+                        .insert(TilemapTexture(road_texture_handle.clone()))
                         .id();
+                        
                     tile_storage.set(&tile_pos, Some(tile_entity));
                     x_pos_tile += dir;
 
@@ -99,7 +101,7 @@ fn draw_road(
                 current_dir_is_x = false;
             } else {
                 let dir = if road_tiles[pos + 2] > 0 {1} else {-1};
-                for y in 0..(road_tiles[pos + 2].abs()  - road_tiles[pos].abs()).abs() {
+                for y in 0..road_tiles[pos + 2].abs(){
                     let tile_pos = TilePos {x: x_pos_tile as u32, y: y_pos_tile as u32};
                     let tile_entity = commands
                         .spawn()
@@ -108,6 +110,7 @@ fn draw_road(
                             tilemap_id: TilemapId(tilemap_entity),
                             ..Default::default()
                         })
+                        .insert(TileFlip{d: true, ..Default::default()})
                         .id();
                     tile_storage.set(&tile_pos, Some(tile_entity));
                     y_pos_tile += dir;
@@ -120,7 +123,7 @@ fn draw_road(
 
     }
 
-    let tile_size = TilemapTileSize {x: 64., y: 64.};
+    let tile_size = TilemapTileSize {x: TILE_SIZE.0, y: TILE_SIZE.1};
 
     commands
         .entity(tilemap_entity)
@@ -136,6 +139,7 @@ fn draw_road(
                 1.,
             ),
             ..Default::default()
-        });
+        })
+        .insert(Path);
 
 }

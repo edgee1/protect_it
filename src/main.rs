@@ -23,11 +23,19 @@ const RELOAD_TIME: u64 = 2;
 const SHOOT_RADIUS: f32 = 300.;
 pub const VELOCITY: f32 = 300.;
 pub const LEVEL_01_ENEMIES_ORDER: &str = "111111111111111";
+pub const TILE_SIZE: (f32, f32) = (64., 64.);
+pub const TILEMAP_SIZE: (u32, u32) = (32, 18);
+pub const START_POS: (f32, f32) = (
+TILEMAP_SIZE.0 as f32 * TILE_SIZE.0 / (-2.) + TILE_SIZE.0 / 2., 
+- TILE_SIZE.1 / 2.
+);
 
+#[derive(Component)]
+pub struct Path;
 pub struct RoadTiles(Vec<i32>);
 impl RoadTiles {
     pub fn level_01() -> Self {
-        RoadTiles(vec![0, 18, 10, -5, 20, 20] ) 
+        RoadTiles(vec![0, 8, 5, -5, 10, -3, 15, 2, -10] ) 
     }
 }
 pub struct Textures {

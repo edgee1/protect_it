@@ -88,7 +88,7 @@ fn defence_shoot (
                         commands.spawn_bundle(SpriteBundle {
                             texture: textures.ball.clone(),
                             transform: Transform { translation: tf.translation, ..Default::default() },
-                            sprite: Sprite {custom_size: Some(Vec2::new(30., 30.)), ..Default::default()},
+                            sprite: Sprite {custom_size: Some(Vec2::new(10., 10.)), ..Default::default()},
                             ..Default::default()
                         })
                         .insert(ProjectileTarget {position: enemy_tf.translation, target_id: enemy_entity.id()})
